@@ -1,0 +1,5 @@
+import Link from "next/link";
+import { requireUser } from "@/lib/auth";
+import { SideNav } from "@/components/side-nav";
+import { BookingForm } from "@/components/forms";
+export default async function NewBooking(){const {supabase}=await requireUser();const {data,error}=await supabase.from("apartments").select("id,code,name,max_guests").eq("status","active").order("code");return <><SideNav active="/bookings"/><main className="main"><div className="heading"><div><h1>Tạo booking</h1><div className="sub">Nhập khách, căn hộ, thời gian và giá phòng</div></div><Link className="btn secondary" href="/bookings">Quay lại</Link></div><section className="card" style={{maxWidth:900}}>{error?<div className="notice">Chưa thể tải căn hộ. Hãy chạy database migration và thêm ít nhất một căn hộ trước.</div>:data?.length?<BookingForm apartments={data}/>:<div className="empty">Tạo căn hộ đang hoạt động trước khi thêm booking. <p><Link href="/apartments/new" className="btn">Thêm căn hộ</Link></p></div>}</section></main></>}
